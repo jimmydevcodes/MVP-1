@@ -16,8 +16,8 @@ return new class extends Migration
             $table->string('name');
             $table->string('lastname');
             $table->string('email')->unique();
-            $table->string('dni', 8)->nullable()->unique();
-            $table->string('carnet_extrangeria', 12)->nullable()->unique();
+            $table->enum('document_type', ['dni', 'carnet_extranjeria'])->nullable();
+            $table->string('document_number', 12)->nullable()->unique();
             $table->date('date_of_birth');
             $table->string('phone', 9);
             $table->string('address');

@@ -43,20 +43,26 @@ class RegisterRequest extends FormRequest
                 'max:255',
                 'unique:users,email',
             ],
-            'dni' => [
-                'required_without:carnet_extrangeria', 
-                'nullable',
+
+            'document_type' => [
+                'required',
                 'string',
-                'digits:8', 
-                'unique:users,dni',
+                'in:dni,carnet_extranjeria',
             ],
 
-            'carnet_extrangeria' => [
-                'required_without:dni', // DNI o Carnet requerido
-                'nullable',
+            'document_number' => [
+                'required',
                 'string',
-                'digits:12', // Exactamente 12 dígitos
-                'unique:users,carnet_extrangeria',
+                'unique:users,document_number',
+                function ($attribute, $value, $fail) {
+                    $docType = $this->input('document_type');
+                    
+                    if ($docType === 'dni' && !preg_match('/^\d{8}$/', $value)) {
+                        $fail('El DNI debe tener exactamente 8 dígitos.');
+                    } elseif ($docType === 'carnet_extranjeria' && !preg_match('/^\d{12}$/', $value)) {
+                        $fail('El Carnet de Extranjería debe tener exactamente 12 dígitos.');
+                    }
+                },
             ],
             
             'date_of_birth' => [
@@ -149,15 +155,13 @@ class RegisterRequest extends FormRequest
             'email.max' => 'El correo electrónico no puede exceder 255 caracteres.',
             'email.unique' => 'Este correo electrónico ya está registrado.',
             
-            // DNI
-            'dni.required_without' => 'Debe proporcionar DNI o Carnet de Extranjería.',
-            'dni.digits' => 'El DNI debe tener exactamente 8 dígitos.',
-            'dni.unique' => 'Este DNI ya está registrado.',
+            // Document Type
+            'document_type.required' => 'Debe seleccionar un tipo de documento.',
+            'document_type.in' => 'El tipo de documento seleccionado no es válido.',
 
-            // Carnet Extranjería
-            'carnet_extrangeria.required_without' => 'Debe proporcionar DNI o Carnet de Extranjería.',
-            'carnet_extrangeria.digits' => 'El Carnet de Extranjería debe tener exactamente 12 dígitos.',
-            'carnet_extrangeria.unique' => 'Este Carnet de Extranjería ya está registrado.',
+            // Document Number
+            'document_number.required' => 'El número de documento es obligatorio.',
+            'document_number.unique' => 'Este número de documento ya está registrado.',
             
             // Date of Birth
             'date_of_birth.required' => 'La fecha de nacimiento es obligatoria.',
@@ -216,8 +220,8 @@ class RegisterRequest extends FormRequest
             'name' => 'nombre',
             'lastname' => 'apellido',
             'email' => 'correo electrónico',
-            'dni' => 'DNI',
-            'carnet_extrangeria' => 'carnet de extranjería',
+            'document_type' => 'tipo de documento',
+            'document_number' => 'número de documento',
             'date_of_birth' => 'fecha de nacimiento',
             'phone' => 'teléfono',
             'address' => 'dirección',
@@ -248,8 +252,7 @@ class RegisterRequest extends FormRequest
             
             // Email siempre en minúsculas
             'email' => strtolower(trim($this->email)),
-            'dni' => $this->dni ? preg_replace('/\s+/', '', $this->dni) : null,
-            'carnet_extrangeria' => $this->carnet_extrangeria ? preg_replace('/\s+/', '', $this->carnet_extrangeria) : null,
+            'document_number' => preg_replace('/\s+/', '', $this->document_number),
             'phone' => preg_replace('/\s+/', '', $this->phone),
             'postal_code' => preg_replace('/\s+/', '', $this->postal_code),
             

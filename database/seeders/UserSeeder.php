@@ -20,8 +20,8 @@ class UserSeeder extends Seeder
         $admin->name = 'Admin';
         $admin->lastname = 'ClinMind';
         $admin->email = 'admin@clinmind.com';
-        $admin->dni = '12345678';
-        $admin->carnet_extrangeria = null;
+        $admin->document_type = 'dni';
+        $admin->document_number = '12345678';
         $admin->date_of_birth = '1985-06-15';
         $admin->phone = '987654321';
         $admin->address = 'Av. Principal 123, San Isidro';
@@ -40,8 +40,8 @@ class UserSeeder extends Seeder
         $psicologo->name = 'Carlos';
         $psicologo->lastname = 'Rodríguez';
         $psicologo->email = 'psicologo@clinmind.com';
-        $psicologo->dni = '87654321';
-        $psicologo->carnet_extrangeria = null;
+        $psicologo->document_type = 'dni';
+        $psicologo->document_number = '87654321';
         $psicologo->date_of_birth = '1990-03-22';
         $psicologo->phone = '912345678';
         $psicologo->address = 'Calle Las Flores 456, Miraflores';
@@ -67,8 +67,8 @@ class UserSeeder extends Seeder
         $extranjera->name = 'María';
         $extranjera->lastname = 'González';
         $extranjera->email = 'extranjera@clinmind.com';
-        $extranjera->dni = null;
-        $extranjera->carnet_extrangeria = '123456789012';
+        $extranjera->document_type = 'carnet_extranjeria';
+        $extranjera->document_number = '123456789012';
         $extranjera->date_of_birth = '1988-11-08';
         $extranjera->phone = '998877665';
         $extranjera->address = 'Av. Benavides 789, Surco';
@@ -94,8 +94,8 @@ class UserSeeder extends Seeder
         $psiquiatra->name = 'Ana';
         $psiquiatra->lastname = 'Martínez';
         $psiquiatra->email = 'psiquiatra@clinmind.com';
-        $psiquiatra->dni = '45678912';
-        $psiquiatra->carnet_extrangeria = null;
+        $psiquiatra->document_type = 'dni';
+        $psiquiatra->document_number = '45678912';
         $psiquiatra->date_of_birth = '1982-07-19';
         $psiquiatra->phone = '987123456';
         $psiquiatra->address = 'Jr. Las Camelias 321, San Borja';
@@ -121,8 +121,8 @@ class UserSeeder extends Seeder
         $terapeuta->name = 'Elena';
         $terapeuta->lastname = 'Ramírez';
         $terapeuta->email = 'terapeuta@clinmind.com';
-        $terapeuta->dni = '78945612';
-        $terapeuta->carnet_extrangeria = null;
+        $terapeuta->document_type = 'dni';
+        $terapeuta->document_number = '78945612';
         $terapeuta->date_of_birth = '1965-01-30';
         $terapeuta->phone = '965432178';
         $terapeuta->address = 'Av. Javier Prado 1024, La Molina';
@@ -148,8 +148,8 @@ class UserSeeder extends Seeder
         $psicologo_joven->name = 'Luis';
         $psicologo_joven->lastname = 'Torres';
         $psicologo_joven->email = 'test@clinmind.com';
-        $psicologo_joven->dni = '32165498';
-        $psicologo_joven->carnet_extrangeria = null;
+        $psicologo_joven->document_type = 'dni';
+        $psicologo_joven->document_number = '32165498';
         $psicologo_joven->date_of_birth = '1995-09-12';
         $psicologo_joven->phone = '923456789';
         $psicologo_joven->address = 'Calle Los Pinos 567, Barranco';

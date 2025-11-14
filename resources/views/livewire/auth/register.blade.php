@@ -86,25 +86,20 @@
             <h3 class="text-xs font-semibold text-gray-700 uppercase tracking-wide mb-3">Información personal</h3>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {{-- DNI --}}
+              {{-- Tipo de Documento --}}
               <div class="relative">
-                <label for="dni" class="block text-sm font-medium text-gray-700 mb-1">DNI</label>
+                <label for="document_type" class="block text-sm font-medium text-gray-700 mb-1">Tipo de Documento</label>
                 <div class="relative rounded-md shadow-sm">
-                  <input type="text"
-                         wire:model="dni"
-                         wire:change="searchDNI"
-                         id="dni"
-                         class="block w-full rounded-md border @error('dni') border-red-300 @else border-gray-300 @enderror
-                                pr-10 py-2.5 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm transition-all duration-200"
-                         maxlength="8"
-                         placeholder="Ingrese su DNI">
-                  <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                    <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 9l-3 3m0 0l-3-3m3 3V4" />
-                    </svg>
-                  </div>
+                  <select wire:model="document_type"
+                         id="document_type"
+                         class="block w-full rounded-md border @error('document_type') border-red-300 @else border-gray-300 @enderror
+                                py-2.5 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm transition-all duration-200">
+                    <option value="">Seleccionar tipo</option>
+                    <option value="dni">DNI (8 dígitos)</option>
+                    <option value="carnet_extranjeria">Carnet de Extranjería (12 dígitos)</option>
+                  </select>
                 </div>
-                @error('dni')
+                @error('document_type')
                   <p class="mt-1 text-sm text-red-600 flex items-center">
                     <svg class="w-4 h-4 mr-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                       <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
@@ -114,24 +109,25 @@
                 @enderror
               </div>
 
-              {{-- Carnet de Extranjería --}}
+              {{-- Número de Documento --}}
               <div class="relative">
-                <label for="carnet_extrangeria" class="block text-sm font-medium text-gray-700 mb-1">Carnet de Extranjería</label>
+                <label for="document_number" class="block text-sm font-medium text-gray-700 mb-1">Número de Documento</label>
                 <div class="relative rounded-md shadow-sm">
                   <input type="text"
-                         wire:model="carnet_extrangeria"
-                         id="carnet_extrangeria"
-                         class="block w-full rounded-md border @error('carnet_extrangeria') border-red-300 @else border-gray-300 @enderror
+                         wire:model="document_number"
+                         wire:change="searchDNI"
+                         id="document_number"
+                         class="block w-full rounded-md border @error('document_number') border-red-300 @else border-gray-300 @enderror
                                 pr-10 py-2.5 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm transition-all duration-200"
-                         maxlength="12"
-                         placeholder="Opcional">
+                         maxlength="{{ $this->maxDocumentLength() }}"
+                         placeholder="Ingrese su documento">
                   <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
                     <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1" />
                     </svg>
                   </div>
                 </div>
-                @error('carnet_extrangeria')
+                @error('document_number')
                   <p class="mt-1 text-sm text-red-600 flex items-center">
                     <svg class="w-4 h-4 mr-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                       <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
@@ -139,6 +135,15 @@
                     {{ $message }}
                   </p>
                 @enderror
+                <p class="mt-1 text-xs text-gray-500">
+                  @if(empty($document_type))
+                    <span>⚠️ Seleccione un tipo de documento primero</span>
+                  @elseif($document_type === 'dni')
+                    <span>💡 Ingrese 8 dígitos. Se completarán automáticamente sus datos.</span>
+                  @elseif($document_type === 'carnet_extranjeria')
+                    <span>💡 Ingrese 12 dígitos (ingreso manual)</span>
+                  @endif
+                </p>
               </div>
 
               {{-- Nombre --}}

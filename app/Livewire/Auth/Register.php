@@ -5,6 +5,7 @@ namespace App\Livewire\Auth;
 use App\Models\User;
 use Livewire\Component;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Computed;
 use App\Services\ReniecService;
 use App\Services\LocationService;
 use Illuminate\Support\Facades\Auth;
@@ -19,8 +20,8 @@ class Register extends Component
     public $name = '';
     public $lastname = '';
     public $email = '';
-    public $dni = '';
-    public $carnet_extrangeria = '';
+    public $document_type = '';
+    public $document_number = '';
     public $date_of_birth = '';
     public $phone = '';
     public $address = '';
@@ -40,6 +41,16 @@ class Register extends Component
     public $selectedState = null;
     public $selectedCity = null;
 
+    #[Computed]
+    public function maxDocumentLength(): int
+    {
+        return match($this->document_type) {
+            'dni' => 8,
+            'carnet_extranjeria' => 12,
+            default => 12,
+        };
+    }
+
     protected $reniecService;
     protected $locationService;
 
@@ -53,6 +64,15 @@ class Register extends Component
     {
         Log::info('Register component mounted');
         $this->loadCountries();
+    }
+
+    public function updatedDocumentType($value): void
+    {
+        // Limpiar datos cuando cambia el tipo de documento
+        $this->document_number = '';
+        $this->name = '';
+        $this->lastname = '';
+        Log::info('Document type changed', ['type' => $value]);
     }
 
     public function loadCountries(): void
@@ -146,8 +166,9 @@ class Register extends Component
 
     public function searchDNI(): void
     {
-        if (preg_match('/^\d{8}$/', $this->dni ?? '')) {
-            $person = $this->reniecService->getPersonByDNI($this->dni);
+        // Solo buscar si es DNI y tiene exactamente 8 dígitos
+        if ($this->document_type === 'dni' && preg_match('/^\d{8}$/', $this->document_number ?? '')) {
+            $person = $this->reniecService->getPersonByDNI($this->document_number);
             if ($person) {
                 $this->name = $person['nombres'] ?? '';
                 $this->lastname = $person['apellidos'] ?? '';
@@ -163,16 +184,15 @@ class Register extends Component
         $user = User::create([
             'name'               => ucwords(strtolower(trim($validated['name']))),
             'lastname'           => ucwords(strtolower(trim($validated['lastname']))),
-            'email'              => strtolower(trim($validated['email'])), // <- sin paréntesis extra
-            'dni'                => $validated['dni'] ? preg_replace('/\s+/', '', $validated['dni']) : null,
-            'carnet_extrangeria' => $validated['carnet_extrangeria'] ? preg_replace('/\s+/', '', $validated['carnet_extrangeria']) : null,
+            'email'              => strtolower(trim($validated['email'])),
+            'document_type'      => $validated['document_type'],
+            'document_number'    => $validated['document_number'] ? preg_replace('/\s+/', '', $validated['document_number']) : null,
             'date_of_birth'      => $validated['date_of_birth'],
             'phone'              => preg_replace('/\s+/', '', $validated['phone']),
             'address'            => $validated['address'],
             'country'            => ucwords(strtolower(trim($validated['country']))),
             'city'               => ucwords(strtolower(trim($validated['city']))),
             'postal_code'        => preg_replace('/\s+/', '', $validated['postal_code']),
-            'specialty'          => $validated['specialty'],
             'password'           => Hash::make($validated['password']),
         ]);
         $professional = Professional::create([
